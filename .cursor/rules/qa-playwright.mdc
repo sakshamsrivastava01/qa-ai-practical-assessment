@@ -1,0 +1,27 @@
+---
+description: Conventions for Playwright QA automation in this repo
+alwaysApply: true
+---
+
+# QA Playwright rules for this repo
+
+- Use the Page Object Model under `PrismStructure-toolshop-playwright/src/pages`
+  for every UI interaction. Specs should read as business steps, not raw
+  Playwright calls.
+- Locator strategy: prefer `[data-test="..."]` attributes. Never use text or
+  CSS-class selectors unless no `data-test` attribute exists.
+- Every test must carry a tag: `@smoke` and/or `@regression`.
+- Test IDs follow `TC-UI-##` for UI specs and `TC-API-##` for API specs,
+  matching the IDs used in `FunctionalTestCase.csv`.
+- Keep total automated cases per type (UI / API) between 5 and 8 — do not
+  expand automation surface area without updating
+  `docs/requirement-risk-analysis.md` first.
+- API calls go through `src/api/ApiClient.js` — do not call
+  `request.get/post` directly from a spec.
+- Any deliberate application quirk (e.g. the checkout double-confirm) must be
+  isolated in a named method with a comment explaining why, never a bare
+  retry loop or blind `waitForTimeout`.
+- Never commit real credentials, tokens, or personal data. Use
+  `test-data/users.json` seeded accounts or `src/utils/dataGenerator.js`.
+- Commit in small, iterative steps (one logical change per commit) — do not
+  batch the whole framework into a single commit.
