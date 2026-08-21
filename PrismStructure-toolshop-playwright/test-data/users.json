@@ -1,0 +1,13 @@
+{
+  "seededUsers": {
+    "admin": { "email": "admin@practicesoftwaretesting.com", "password": "welcome01", "role": "admin" },
+    "customer1": { "email": "customer@practicesoftwaretesting.com", "password": "welcome01", "role": "user" },
+    "customer2": { "email": "customer2@practicesoftwaretesting.com", "password": "welcome01", "role": "user" }
+  },
+  "invalidLoginCases": [
+    { "case": "wrong_password", "email": "customer@practicesoftwaretesting.com", "password": "wrongPass123" },
+    { "case": "unregistered_email", "email": "not-a-real-user@example.com", "password": "welcome01" },
+    { "case": "malformed_email", "email": "customer@@practicesoftwaretesting", "password": "welcome01" },
+    { "case": "empty_password", "email": "customer@practicesoftwaretesting.com", "password": "" }
+  ]
+}
