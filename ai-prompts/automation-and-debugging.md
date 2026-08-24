@@ -76,3 +76,8 @@
 - Prompt: Run TC-UI-08 against the live application, inspect each checkout step, and fix only the broken checkout and invoice logic.
 - AI Response Summary: Found protected pre-checkout login navigation, new address steps and `house_number`, stale payment selectors, asynchronous address overwrites, and a nonexistent invoice search form.
 - Debugging Outcome: Signed in inside checkout, followed `proceed-2` and `proceed-3`, serialized address updates, used `finish` and the payment success signal for double confirmation, then verified the invoice in the live table; the isolated test passed.
+
+### Entry 9
+- Prompt: Run TC-API-01 against the live API and fix only the registration data or API logic causing the 422 response.
+- AI Response Summary: Confirmed the API case used the same generated user whose static password the live breach check rejected in the UI flow.
+- Debugging Outcome: The separately committed unique policy-compliant password generator fixed the shared payload; the isolated API registration test passed without changing ApiClient.
