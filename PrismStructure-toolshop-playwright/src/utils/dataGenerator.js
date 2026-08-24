@@ -34,7 +34,7 @@ function billingDetails(overrides = {}) {
     billing_city: faker.location.city(),
     billing_state: faker.location.state(),
     billing_country: 'DE',
-    billing_postal_code: faker.location.zipCode('####'),
+    billing_postal_code: faker.location.zipCode('#####'),
     payment_method: 'cash-on-delivery',
     payment_details: {},
     ...overrides,
