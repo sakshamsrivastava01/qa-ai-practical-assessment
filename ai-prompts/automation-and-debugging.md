@@ -81,3 +81,8 @@
 - Prompt: Run TC-API-01 against the live API and fix only the registration data or API logic causing the 422 response.
 - AI Response Summary: Confirmed the API case used the same generated user whose static password the live breach check rejected in the UI flow.
 - Debugging Outcome: The separately committed unique policy-compliant password generator fixed the shared payload; the isolated API registration test passed without changing ApiClient.
+
+### Entry 10
+- Prompt: Run TC-API-10 against the live API, inspect the real validation response, and fix only the invoice payload and assertions.
+- AI Response Summary: Found incoherent Faker address fields, a locked shared account, and a live creation contract of 201 with `id` and `invoice_number` but no `status`.
+- Debugging Outcome: Used the second seeded customer, postcode-coherent billing data, and the observed response contract; the isolated invoice test passed and its persisted invoice was fetched successfully.
