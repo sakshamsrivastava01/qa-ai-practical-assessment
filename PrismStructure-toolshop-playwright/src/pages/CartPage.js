@@ -14,7 +14,7 @@ class CartPage extends BasePage {
     const escapedName = productName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     return this.page.locator('tr').filter({
       has: this.page.locator('[data-test="product-title"]', {
-        hasText: new RegExp(`^${escapedName}$`),
+        hasText: new RegExp(`^${escapedName}\\s*$`),
       }),
     });
   }
