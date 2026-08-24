@@ -14,6 +14,7 @@ class RegisterPage extends BasePage {
     this.city = page.locator('[data-test="city"]');
     this.state = page.locator('[data-test="state"]');
     this.country = page.locator('[data-test="country"]');
+    this.houseNumber = page.locator('[data-test="house_number"]');
     this.phone = page.locator('[data-test="phone"]');
     this.email = page.locator('[data-test="email"]');
     this.password = page.locator('[data-test="password"]');
@@ -36,6 +37,7 @@ class RegisterPage extends BasePage {
     await this.country.selectOption({ label: user.address.country }).catch(() =>
       this.country.fill(user.address.country)
     );
+    await this.houseNumber.fill(user.address.house_number);
     await this.phone.fill(user.phone);
     await this.email.fill(user.email);
     await this.password.fill(user.password);

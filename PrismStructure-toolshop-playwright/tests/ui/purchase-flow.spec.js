@@ -10,16 +10,10 @@ const { ProductPage } = require('../../src/pages/ProductPage');
 const { CartPage } = require('../../src/pages/CartPage');
 const { CheckoutPage } = require('../../src/pages/CheckoutPage');
 const { InvoicesPage } = require('../../src/pages/InvoicesPage');
+const { newUser } = require('../../src/utils/dataGenerator');
 const seeded = require('../../test-data/users.json');
 
 test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
-  test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const { email, password } = seeded.seededUsers.customer1;
-    await loginPage.open();
-    await loginPage.login(email, password);
-  });
-
   test('TC-UI-07 user can browse, add multiple items and update quantity in cart @smoke @regression', async ({ page }) => {
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
@@ -38,15 +32,18 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
 
     await homePage.openCart();
     await expect(cartPage.rowQuantityInput(secondProductName)).toHaveValue('2');
-    await expect(page.locator('tr', { hasText: firstProductName })).toBeVisible();
+    await expect(cartPage.rowByProductName(firstProductName)).toBeVisible();
   });
 
   test('TC-UI-08 user can complete checkout via Cash on Delivery and view invoice @smoke @regression', async ({ page }) => {
+    const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const invoicesPage = new InvoicesPage(page);
+    const { email, password } = seeded.seededUsers.customer2;
+    const billingAddress = newUser().address;
 
     await homePage.open();
     await homePage.productCards.first().click();
@@ -55,8 +52,9 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await homePage.openCart();
     await cartPage.proceedToCheckout();
 
-    // Sign-in already satisfied via beforeEach; proceed through address step.
-    await checkoutPage.proceedBtn.click().catch(() => {});
+    await loginPage.login(email, password);
+    await checkoutPage.proceedFromLogin();
+    await checkoutPage.fillAddress(billingAddress);
     await checkoutPage.selectPaymentMethod('Cash on Delivery');
 
     // Documented quirk: confirm must be pressed twice for the invoice to
@@ -64,10 +62,10 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await checkoutPage.confirmOrderTwice();
 
     await expect(checkoutPage.orderConfirmation).toBeVisible();
-    const invoiceNumber = await checkoutPage.invoiceNumber.innerText();
+    const invoiceNumber = await checkoutPage.getInvoiceNumber();
 
-    await invoicesPage.open();
-    await invoicesPage.searchInvoice(invoiceNumber);
+    await homePage.accountMenu.click();
+    await homePage.myInvoicesLink.click();
     await expect(invoicesPage.rowByInvoiceNumber(invoiceNumber)).toBeVisible();
   });
 
@@ -82,7 +80,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await productPage.addToCart();
 
     await homePage.openCart();
-    await cartPage.removeButton(productName).click();
+    await cartPage.removeProduct(productName);
 
     await expect(cartPage.emptyCartMessage).toBeVisible();
   });

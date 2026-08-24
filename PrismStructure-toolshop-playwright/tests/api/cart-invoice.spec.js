@@ -15,7 +15,7 @@ test.describe('API AC2 - Product Selection & Invoice Generation @api', () => {
 
   test.beforeEach(async ({ request }) => {
     client = new ApiClient(request);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
     await client.login(email, password);
 
     const productsRes = await client.getProducts({ page: 1 });
@@ -53,10 +53,10 @@ test.describe('API AC2 - Product Selection & Invoice Generation @api', () => {
     const payload = billingDetails({ cart_id: cartId });
     const res = await client.createInvoice(payload);
 
-    expect(res.status()).toBe(200);
+    expect(res.status()).toBe(201);
     const invoice = await res.json();
     expect(invoice).toHaveProperty('invoice_number');
-    expect(invoice.status).toBeTruthy();
+    expect(invoice.id).toBeTruthy();
 
     const fetchRes = await client.getInvoice(invoice.id);
     expect(fetchRes.status()).toBe(200);

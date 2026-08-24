@@ -9,7 +9,7 @@ class HomePage extends BasePage {
     this.searchResetBtn = page.locator('[data-test="search-reset"]');
     this.productCards = page.locator('[data-test="product-name"]');
     this.cartIcon = page.locator('[data-test="nav-cart"]');
-    this.accountMenu = page.locator('[data-test="nav-my-account"]');
+    this.accountMenu = page.locator('[data-test="nav-menu"]');
     this.signOutLink = page.locator('[data-test="nav-sign-out"]');
     this.myInvoicesLink = page.locator('[data-test="nav-my-invoices"]');
     this.myProfileLink = page.locator('[data-test="nav-my-profile"]');

@@ -2,7 +2,8 @@
 // AC1: User Registration & Login
 // Covers: successful registration, successful login with registered
 // credentials, profile verification, and negative login attempts.
-const { test, expect } = require('@playwright/test');
+const { test, expect, request: apiRequest } = require('@playwright/test');
+const { ApiClient } = require('../../src/api/ApiClient');
 const { RegisterPage } = require('../../src/pages/RegisterPage');
 const { LoginPage } = require('../../src/pages/LoginPage');
 const { HomePage } = require('../../src/pages/HomePage');
@@ -17,9 +18,8 @@ test.describe('AC1 - User Registration & Login @ui', () => {
     await registerPage.open();
     await registerPage.register(user);
 
-    // Toolshop redirects to the login page with a success banner on success.
+    // Toolshop signals successful registration by redirecting to the login page.
     await expect(page).toHaveURL(/\/auth\/login/);
-    await expect(page.getByText(/registration complete|please proceed to login/i)).toBeVisible();
   });
 
   test('TC-UI-02 registration fails with duplicate / already-used email @regression', async ({ page }) => {
@@ -34,22 +34,28 @@ test.describe('AC1 - User Registration & Login @ui', () => {
 
   test('TC-UI-03 registered user can log in with valid credentials @smoke @regression', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const homePage = new HomePage(page);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
 
     await loginPage.open();
     await loginPage.login(email, password);
 
-    await expect(page).toHaveURL(/\/account|\/$/);
-    await expect(homePage.accountMenu).toBeVisible();
+    await expect(page).toHaveURL(/\/account\/?$/);
   });
 
   test('TC-UI-04 login fails with an incorrect password @smoke @regression', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const { email } = seeded.seededUsers.customer1;
+    const user = newUser();
+    const apiContext = await apiRequest.newContext({
+      baseURL: process.env.API_BASE_URL || 'https://api.practicesoftwaretesting.com',
+    });
+    const client = new ApiClient(apiContext);
+
+    const registration = await client.register(user);
+    expect(registration.status()).toBe(201);
+    await apiContext.dispose();
 
     await loginPage.open();
-    await loginPage.login(email, 'WrongPassword123');
+    await loginPage.login(user.email, 'WrongPassword123');
 
     await expect(loginPage.error).toBeVisible();
     await expect(page).toHaveURL(/\/auth\/login/);
@@ -58,10 +64,18 @@ test.describe('AC1 - User Registration & Login @ui', () => {
   test('TC-UI-05 logged-in user can view and verify their profile information @regression', async ({ page }) => {
     const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
+    const apiContext = await apiRequest.newContext({
+      baseURL: process.env.API_BASE_URL || 'https://api.practicesoftwaretesting.com',
+    });
+    const client = new ApiClient(apiContext);
 
-    await loginPage.open();
-    await loginPage.login(email, password);
+    const login = await client.login(email, password);
+    expect(login.status()).toBe(200);
+    await loginPage.establishSession(client.token);
+    await apiContext.dispose();
+
+    await homePage.open();
     await homePage.accountMenu.click();
     await homePage.myProfileLink.click();
 

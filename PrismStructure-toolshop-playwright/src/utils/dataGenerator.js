@@ -18,10 +18,11 @@ function newUser(overrides = {}) {
       state: faker.location.state(),
       country: 'Germany',
       postal_code: faker.location.zipCode('#####'),
+      house_number: faker.string.numeric({ length: { min: 1, max: 3 } }),
     },
     phone: faker.string.numeric(10),
     dob: '1996-05-14',
-    password: 'Welcome@2026',
+    password: `Qa!7${faker.string.alphanumeric(16)}`,
     email: uniqueEmail(),
     ...overrides,
   };
@@ -29,11 +30,11 @@ function newUser(overrides = {}) {
 
 function billingDetails(overrides = {}) {
   return {
-    billing_street: faker.location.streetAddress(),
-    billing_city: faker.location.city(),
-    billing_state: faker.location.state(),
+    billing_street: 'Test Street 1',
+    billing_city: 'Heidenheim an der Brenz',
+    billing_state: 'Rheinland-Pfalz',
     billing_country: 'DE',
-    billing_postal_code: faker.location.zipCode('####'),
+    billing_postal_code: '10115',
     payment_method: 'cash-on-delivery',
     payment_details: {},
     ...overrides,

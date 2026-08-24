@@ -4,8 +4,6 @@ const { BasePage } = require('./BasePage');
 class InvoicesPage extends BasePage {
   constructor(page) {
     super(page);
-    this.searchInput = page.locator('[data-test="search-query"]');
-    this.searchBtn = page.locator('[data-test="search-submit"]');
     this.invoiceRows = page.locator('table tbody tr');
   }
 
@@ -15,11 +13,6 @@ class InvoicesPage extends BasePage {
 
   rowByInvoiceNumber(invoiceNumber) {
     return this.page.locator('tr', { hasText: invoiceNumber });
-  }
-
-  async searchInvoice(term) {
-    await this.searchInput.fill(term);
-    await this.searchBtn.click();
   }
 }
 

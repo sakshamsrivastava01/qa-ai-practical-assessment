@@ -10,14 +10,34 @@ class CartPage extends BasePage {
     this.emptyCartMessage = page.getByText(/cart is empty/i);
   }
 
+  rowByProductName(productName) {
+    const escapedName = productName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return this.page.locator('tr').filter({
+      has: this.page.locator('[data-test="product-title"]', {
+        hasText: new RegExp(`^${escapedName}\\s*$`),
+      }),
+    });
+  }
+
   rowQuantityInput(productName) {
-    return this.page
-      .locator('tr', { hasText: productName })
-      .locator('[data-test="quantity"]');
+    return this.rowByProductName(productName).locator('[data-test="product-quantity"]');
   }
 
   removeButton(productName) {
-    return this.page.locator('tr', { hasText: productName }).locator('[data-test="remove"]');
+    // The live cart's remove anchor has no data-test attribute.
+    return this.rowByProductName(productName).locator('a');
+  }
+
+  async removeProduct(productName) {
+    await Promise.all([
+      this.page.waitForResponse((response) => {
+        const path = new URL(response.url()).pathname;
+        return response.request().method() === 'DELETE'
+          && /\/carts\/[^/]+\/product\/[^/]+$/.test(path)
+          && response.ok();
+      }),
+      this.removeButton(productName).click(),
+    ]);
   }
 
   async proceedToCheckout() {
