@@ -10,10 +10,17 @@ class CartPage extends BasePage {
     this.emptyCartMessage = page.getByText(/cart is empty/i);
   }
 
+  rowByProductName(productName) {
+    const escapedName = productName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return this.page.locator('tr').filter({
+      has: this.page.locator('[data-test="product-title"]', {
+        hasText: new RegExp(`^${escapedName}$`),
+      }),
+    });
+  }
+
   rowQuantityInput(productName) {
-    return this.page
-      .locator('tr', { hasText: productName })
-      .locator('[data-test="product-quantity"]');
+    return this.rowByProductName(productName).locator('[data-test="product-quantity"]');
   }
 
   removeButton(productName) {

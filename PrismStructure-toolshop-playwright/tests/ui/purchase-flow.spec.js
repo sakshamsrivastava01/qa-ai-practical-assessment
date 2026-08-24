@@ -31,7 +31,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
 
     await homePage.openCart();
     await expect(cartPage.rowQuantityInput(secondProductName)).toHaveValue('2');
-    await expect(page.locator('tr', { hasText: firstProductName })).toBeVisible();
+    await expect(cartPage.rowByProductName(firstProductName)).toBeVisible();
   });
 
   test('TC-UI-08 user can complete checkout via Cash on Delivery and view invoice @smoke @regression', async ({ page }) => {
