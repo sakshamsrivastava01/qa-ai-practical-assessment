@@ -18,7 +18,15 @@ class ProductPage extends BasePage {
   }
 
   async addToCart() {
-    await this.addToCartBtn.click();
+    await Promise.all([
+      this.page.waitForResponse((response) => {
+        const path = new URL(response.url()).pathname;
+        return response.request().method() === 'POST'
+          && /\/carts\/[^/]+$/.test(path)
+          && response.ok();
+      }),
+      this.addToCartBtn.click(),
+    ]);
   }
 }
 
