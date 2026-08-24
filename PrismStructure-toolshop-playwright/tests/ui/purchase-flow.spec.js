@@ -43,8 +43,6 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     const invoicesPage = new InvoicesPage(page);
     const { email, password } = seeded.seededUsers.customer1;
 
-    await loginPage.open();
-    await loginPage.login(email, password);
     await homePage.open();
     await homePage.productCards.first().click();
     await productPage.addToCart();
@@ -52,8 +50,9 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await homePage.openCart();
     await cartPage.proceedToCheckout();
 
-    // Sign-in already satisfied via beforeEach; proceed through address step.
-    await checkoutPage.proceedBtn.click().catch(() => {});
+    await loginPage.login(email, password);
+    await checkoutPage.loginProceedBtn.click();
+    await checkoutPage.addressProceedBtn.click();
     await checkoutPage.selectPaymentMethod('Cash on Delivery');
 
     // Documented quirk: confirm must be pressed twice for the invoice to

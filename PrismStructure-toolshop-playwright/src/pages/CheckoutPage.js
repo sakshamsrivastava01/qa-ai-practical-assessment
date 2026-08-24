@@ -9,13 +9,16 @@ const { BasePage } = require('./BasePage');
 class CheckoutPage extends BasePage {
   constructor(page) {
     super(page);
+    // Step: sign in
+    this.loginProceedBtn = page.locator('[data-test="proceed-2"]');
+
     // Step: address confirmation
     this.street = page.locator('[data-test="street"]');
     this.city = page.locator('[data-test="city"]');
     this.state = page.locator('[data-test="state"]');
     this.country = page.locator('[data-test="country"]');
     this.postcode = page.locator('[data-test="postal_code"]');
-    this.proceedBtn = page.locator('[data-test="proceed-2"]');
+    this.addressProceedBtn = page.locator('[data-test="proceed-3"]');
 
     // Step: payment method
     this.paymentMethodSelect = page.locator('[data-test="payment-method"]');
@@ -33,7 +36,7 @@ class CheckoutPage extends BasePage {
       this.country.fill(address.country)
     );
     await this.postcode.fill(address.postal_code);
-    await this.proceedBtn.click();
+    await this.addressProceedBtn.click();
   }
 
   async selectPaymentMethod(method = 'Cash on Delivery') {
