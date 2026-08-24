@@ -30,11 +30,11 @@ function newUser(overrides = {}) {
 
 function billingDetails(overrides = {}) {
   return {
-    billing_street: faker.location.streetAddress(),
-    billing_city: faker.location.city(),
-    billing_state: faker.location.state(),
+    billing_street: 'Test Street 1',
+    billing_city: 'Heidenheim an der Brenz',
+    billing_state: 'Rheinland-Pfalz',
     billing_country: 'DE',
-    billing_postal_code: faker.location.zipCode('#####'),
+    billing_postal_code: '10115',
     payment_method: 'cash-on-delivery',
     payment_details: {},
     ...overrides,
