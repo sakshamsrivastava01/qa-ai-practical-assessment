@@ -4,6 +4,7 @@
 // pressed TWICE on the deployed environment before the invoice is generated -
 // this is a known application quirk, not a mistake in the automation, and is
 // deliberately encoded here (with a comment) rather than hidden.
+const { expect } = require('@playwright/test');
 const { BasePage } = require('./BasePage');
 
 class CheckoutPage extends BasePage {
@@ -30,14 +31,20 @@ class CheckoutPage extends BasePage {
   }
 
   async fillAddress(address) {
-    await this.street.fill(address.street);
-    await this.city.fill(address.city);
-    await this.state.fill(address.state);
     await this.country.selectOption({ label: address.country }).catch(() =>
       this.country.fill(address.country)
     );
     await this.postcode.fill(address.postal_code);
-    await this.houseNumber.fill(address.house_number);
+    await Promise.all([
+      this.page.waitForResponse((response) => {
+        const path = new URL(response.url()).pathname;
+        return response.request().method() === 'GET' && path.endsWith('/postcode-lookup');
+      }),
+      this.houseNumber.fill(address.house_number),
+    ]);
+    await this.street.fill(address.street);
+    await this.city.fill(address.city);
+    await this.state.fill(address.state);
     await this.addressProceedBtn.click();
   }
 
@@ -51,6 +58,7 @@ class CheckoutPage extends BasePage {
       }),
       this.loginProceedBtn.click(),
     ]);
+    await expect(this.street).toHaveValue(/.+/);
   }
 
   async selectPaymentMethod(method = 'Cash on Delivery') {
