@@ -53,7 +53,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await cartPage.proceedToCheckout();
 
     await loginPage.login(email, password);
-    await checkoutPage.loginProceedBtn.click();
+    await checkoutPage.proceedFromLogin();
     await checkoutPage.fillAddress(billingAddress);
     await checkoutPage.selectPaymentMethod('Cash on Delivery');
 

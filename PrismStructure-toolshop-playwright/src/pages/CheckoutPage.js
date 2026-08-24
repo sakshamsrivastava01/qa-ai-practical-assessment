@@ -41,6 +41,18 @@ class CheckoutPage extends BasePage {
     await this.addressProceedBtn.click();
   }
 
+  async proceedFromLogin() {
+    await Promise.all([
+      this.page.waitForResponse((response) => {
+        const path = new URL(response.url()).pathname;
+        return response.request().method() === 'GET'
+          && path.endsWith('/users/me')
+          && response.ok();
+      }),
+      this.loginProceedBtn.click(),
+    ]);
+  }
+
   async selectPaymentMethod(method = 'Cash on Delivery') {
     await this.paymentMethodSelect.selectOption({ label: method });
   }
