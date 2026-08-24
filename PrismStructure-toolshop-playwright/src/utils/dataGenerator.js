@@ -22,7 +22,7 @@ function newUser(overrides = {}) {
     },
     phone: faker.string.numeric(10),
     dob: '1996-05-14',
-    password: 'Welcome@2026',
+    password: `Qa!7${faker.string.alphanumeric(16)}`,
     email: uniqueEmail(),
     ...overrides,
   };
