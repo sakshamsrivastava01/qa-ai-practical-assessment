@@ -15,7 +15,7 @@ test.describe('API AC2 - Product Selection & Invoice Generation @api', () => {
 
   test.beforeEach(async ({ request }) => {
     client = new ApiClient(request);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
     await client.login(email, password);
 
     const productsRes = await client.getProducts({ page: 1 });
