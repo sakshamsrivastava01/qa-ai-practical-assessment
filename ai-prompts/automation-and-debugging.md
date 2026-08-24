@@ -106,3 +106,8 @@
 - Prompt: Re-run TC-UI-04 without shared-account lockout or an extra Cloudflare-challenged registration redirect.
 - AI Response Summary: Seeded a generated user through ApiClient, then exercised only the live login form with the incorrect password.
 - Debugging Outcome: The live UI displayed `data-test="login-error"` and the isolated test passed.
+
+### Entry 15
+- Prompt: Run TC-UI-05 from the regression suite and inspect the live profile navigation failure.
+- AI Response Summary: Confirmed `nav-menu` and `nav-my-profile` were correct, but Cloudflare intercepted the full account redirect performed by UI login.
+- Debugging Outcome: Established the session through ApiClient and then used the live header controls for client-side profile navigation; the isolated profile test passed.
