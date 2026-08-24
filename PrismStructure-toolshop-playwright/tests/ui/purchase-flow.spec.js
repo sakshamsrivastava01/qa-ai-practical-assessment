@@ -13,13 +13,6 @@ const { InvoicesPage } = require('../../src/pages/InvoicesPage');
 const seeded = require('../../test-data/users.json');
 
 test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
-  test.beforeEach(async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    const { email, password } = seeded.seededUsers.customer1;
-    await loginPage.open();
-    await loginPage.login(email, password);
-  });
-
   test('TC-UI-07 user can browse, add multiple items and update quantity in cart @smoke @regression', async ({ page }) => {
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
@@ -42,12 +35,16 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
   });
 
   test('TC-UI-08 user can complete checkout via Cash on Delivery and view invoice @smoke @regression', async ({ page }) => {
+    const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
     const productPage = new ProductPage(page);
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const invoicesPage = new InvoicesPage(page);
+    const { email, password } = seeded.seededUsers.customer1;
 
+    await loginPage.open();
+    await loginPage.login(email, password);
     await homePage.open();
     await homePage.productCards.first().click();
     await productPage.addToCart();
