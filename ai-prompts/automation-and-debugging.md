@@ -86,3 +86,23 @@
 - Prompt: Run TC-API-10 against the live API, inspect the real validation response, and fix only the invoice payload and assertions.
 - AI Response Summary: Found incoherent Faker address fields, a locked shared account, and a live creation contract of 201 with `id` and `invoice_number` but no `status`.
 - Debugging Outcome: Used the second seeded customer, postcode-coherent billing data, and the observed response contract; the isolated invoice test passed and its persisted invoice was fetched successfully.
+
+### Entry 11
+- Prompt: Re-run TC-UI-03 after the full smoke run exposed the shared account lock.
+- AI Response Summary: Confirmed the primary seeded account remained on the login page while the second seeded customer was available.
+- Debugging Outcome: Isolated valid UI login on the second seeded customer; the specific test passed.
+
+### Entry 12
+- Prompt: Re-run TC-API-03 after the live API returned 423 for the shared account.
+- AI Response Summary: Confirmed the failure was mutable account lock state rather than token parsing or ApiClient logic.
+- Debugging Outcome: Isolated valid API login on the second seeded customer; the specific test passed with a bearer token.
+
+### Entry 13
+- Prompt: Re-run TC-API-04 without allowing the negative case to lock a shared seeded account.
+- AI Response Summary: Suggested registering a generated user before submitting one incorrect password.
+- Debugging Outcome: The negative API login now uses its own generated account, returns 401, and passes in isolation.
+
+### Entry 14
+- Prompt: Re-run TC-UI-04 without shared-account lockout or an extra Cloudflare-challenged registration redirect.
+- AI Response Summary: Seeded a generated user through ApiClient, then exercised only the live login form with the incorrect password.
+- Debugging Outcome: The live UI displayed `data-test="login-error"` and the isolated test passed.
