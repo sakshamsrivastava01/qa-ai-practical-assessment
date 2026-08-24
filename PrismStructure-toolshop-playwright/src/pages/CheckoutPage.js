@@ -55,7 +55,18 @@ class CheckoutPage extends BasePage {
   async confirmOrderTwice() {
     await this.confirmPaymentBtn.click();
     await this.paymentSuccessMessage.waitFor({ state: 'visible' });
-    await this.confirmPaymentBtn.click();
+    const [invoiceResponse] = await Promise.all([
+      this.page.waitForResponse((response) => {
+        const path = new URL(response.url()).pathname;
+        return response.request().method() === 'POST' && path.endsWith('/invoices');
+      }),
+      this.confirmPaymentBtn.click(),
+    ]);
+    if (!invoiceResponse.ok()) {
+      throw new Error(
+        `Invoice creation failed (${invoiceResponse.status()}): ${await invoiceResponse.text()}`
+      );
+    }
   }
 
   async getInvoiceNumber() {
