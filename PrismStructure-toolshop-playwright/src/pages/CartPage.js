@@ -13,7 +13,7 @@ class CartPage extends BasePage {
   rowQuantityInput(productName) {
     return this.page
       .locator('tr', { hasText: productName })
-      .locator('[data-test="quantity"]');
+      .locator('[data-test="product-quantity"]');
   }
 
   removeButton(productName) {
