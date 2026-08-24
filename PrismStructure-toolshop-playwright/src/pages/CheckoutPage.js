@@ -18,6 +18,7 @@ class CheckoutPage extends BasePage {
     this.state = page.locator('[data-test="state"]');
     this.country = page.locator('[data-test="country"]');
     this.postcode = page.locator('[data-test="postal_code"]');
+    this.houseNumber = page.locator('[data-test="house_number"]');
     this.addressProceedBtn = page.locator('[data-test="proceed-3"]');
 
     // Step: payment method
@@ -36,6 +37,7 @@ class CheckoutPage extends BasePage {
       this.country.fill(address.country)
     );
     await this.postcode.fill(address.postal_code);
+    await this.houseNumber.fill(address.house_number);
     await this.addressProceedBtn.click();
   }
 

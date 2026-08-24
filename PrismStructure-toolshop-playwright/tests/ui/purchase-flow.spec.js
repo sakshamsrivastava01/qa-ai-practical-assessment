@@ -10,6 +10,7 @@ const { ProductPage } = require('../../src/pages/ProductPage');
 const { CartPage } = require('../../src/pages/CartPage');
 const { CheckoutPage } = require('../../src/pages/CheckoutPage');
 const { InvoicesPage } = require('../../src/pages/InvoicesPage');
+const { newUser } = require('../../src/utils/dataGenerator');
 const seeded = require('../../test-data/users.json');
 
 test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
@@ -42,6 +43,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     const checkoutPage = new CheckoutPage(page);
     const invoicesPage = new InvoicesPage(page);
     const { email, password } = seeded.seededUsers.customer2;
+    const billingAddress = newUser().address;
 
     await homePage.open();
     await homePage.productCards.first().click();
@@ -52,7 +54,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
 
     await loginPage.login(email, password);
     await checkoutPage.loginProceedBtn.click();
-    await checkoutPage.addressProceedBtn.click();
+    await checkoutPage.fillAddress(billingAddress);
     await checkoutPage.selectPaymentMethod('Cash on Delivery');
 
     // Documented quirk: confirm must be pressed twice for the invoice to
