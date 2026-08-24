@@ -71,3 +71,8 @@
 - Prompt: Run TC-UI-07 against the live application, inspect the product and cart elements, and fix only the broken cart flow.
 - AI Response Summary: Found an unnecessary authenticated redirect, the live `product-quantity` and `product-title` selectors, an add-item navigation race, and ambiguous substring matching for Pliers.
 - Debugging Outcome: Scoped login away from public cart tests, waited for cart persistence, and matched exact product rows and quantities using the live selectors; the isolated test passed.
+
+### Entry 8
+- Prompt: Run TC-UI-08 against the live application, inspect each checkout step, and fix only the broken checkout and invoice logic.
+- AI Response Summary: Found protected pre-checkout login navigation, new address steps and `house_number`, stale payment selectors, asynchronous address overwrites, and a nonexistent invoice search form.
+- Debugging Outcome: Signed in inside checkout, followed `proceed-2` and `proceed-3`, serialized address updates, used `finish` and the payment success signal for double confirmation, then verified the invoice in the live table; the isolated test passed.
