@@ -1,0 +1,125 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: api\cart-invoice.spec.js >> API AC2 - Product Selection & Invoice Generation @api >> TC-API-07 authenticated user can retrieve the product catalog @smoke @regression
+- Location: tests\api\cart-invoice.spec.js:29:3
+
+# Error details
+
+```
+TimeoutError: apiRequestContext.post: Timeout 10000ms exceeded.
+Call log:
+  - → POST https://api.practicesoftwaretesting.com/users/login
+    - user-agent: Playwright/1.62.1 (x64; windows 10.0) node/24.19
+    - accept: */*
+    - accept-encoding: gzip,deflate,br
+    - content-type: application/json
+    - content-length: 71
+
+```
+
+# Test source
+
+```ts
+  1  | // src/api/ApiClient.js
+  2  | // Thin wrapper around Playwright's APIRequestContext so specs read like
+  3  | // business steps ("register", "login", "createCart") instead of raw fetch calls.
+  4  | 
+  5  | const ENDPOINTS = require('./endpoints');
+  6  | 
+  7  | class ApiClient {
+  8  |   /**
+  9  |    * @param {import('@playwright/test').APIRequestContext} request
+  10 |    */
+  11 |   constructor(request) {
+  12 |     this.request = request;
+  13 |     this.token = null;
+  14 |   }
+  15 | 
+  16 |   authHeaders() {
+  17 |     return this.token ? { Authorization: `Bearer ${this.token}` } : {};
+  18 |   }
+  19 | 
+  20 |   async register(user) {
+  21 |     return this.request.post(ENDPOINTS.users.register, { data: user });
+  22 |   }
+  23 | 
+  24 |   async login(email, password) {
+> 25 |     const res = await this.request.post(ENDPOINTS.users.login, {
+     |                                    ^ TimeoutError: apiRequestContext.post: Timeout 10000ms exceeded.
+  26 |       data: { email, password },
+  27 |     });
+  28 |     if (res.ok()) {
+  29 |       const body = await res.json();
+  30 |       this.token = body.access_token;
+  31 |     }
+  32 |     return res;
+  33 |   }
+  34 | 
+  35 |   async me() {
+  36 |     return this.request.get(ENDPOINTS.users.me, { headers: this.authHeaders() });
+  37 |   }
+  38 | 
+  39 |   async getProducts(params = {}) {
+  40 |     return this.request.get(ENDPOINTS.products.base, { params, headers: this.authHeaders() });
+  41 |   }
+  42 | 
+  43 |   async searchProducts(q) {
+  44 |     return this.request.get(ENDPOINTS.products.search, { params: { q }, headers: this.authHeaders() });
+  45 |   }
+  46 | 
+  47 |   async createCart() {
+  48 |     return this.request.post(ENDPOINTS.carts.base, { headers: this.authHeaders() });
+  49 |   }
+  50 | 
+  51 |   async addItemToCart(cartId, productId, quantity = 1) {
+  52 |     return this.request.post(ENDPOINTS.carts.item(cartId), {
+  53 |       data: { product_id: productId, quantity },
+  54 |       headers: this.authHeaders(),
+  55 |     });
+  56 |   }
+  57 | 
+  58 |   async updateCartQuantity(cartId, productId, quantity) {
+  59 |     return this.request.put(ENDPOINTS.carts.quantity(cartId), {
+  60 |       data: { product_id: productId, quantity },
+  61 |       headers: this.authHeaders(),
+  62 |     });
+  63 |   }
+  64 | 
+  65 |   async getCart(cartId) {
+  66 |     return this.request.get(ENDPOINTS.carts.byId(cartId), { headers: this.authHeaders() });
+  67 |   }
+  68 | 
+  69 |   async removeCartItem(cartId, productId) {
+  70 |     return this.request.delete(ENDPOINTS.carts.product(cartId, productId), {
+  71 |       headers: this.authHeaders(),
+  72 |     });
+  73 |   }
+  74 | 
+  75 |   async createInvoice(payload) {
+  76 |     return this.request.post(ENDPOINTS.invoices.base, {
+  77 |       data: payload,
+  78 |       headers: this.authHeaders(),
+  79 |     });
+  80 |   }
+  81 | 
+  82 |   async getInvoices(page = 1) {
+  83 |     return this.request.get(ENDPOINTS.invoices.base, {
+  84 |       params: { page },
+  85 |       headers: this.authHeaders(),
+  86 |     });
+  87 |   }
+  88 | 
+  89 |   async getInvoice(invoiceId) {
+  90 |     return this.request.get(ENDPOINTS.invoices.byId(invoiceId), { headers: this.authHeaders() });
+  91 |   }
+  92 | }
+  93 | 
+  94 | module.exports = { ApiClient };
+  95 | 
+```
