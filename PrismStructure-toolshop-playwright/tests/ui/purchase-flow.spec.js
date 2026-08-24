@@ -80,7 +80,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await productPage.addToCart();
 
     await homePage.openCart();
-    await cartPage.removeButton(productName).click();
+    await cartPage.removeProduct(productName);
 
     await expect(cartPage.emptyCartMessage).toBeVisible();
   });
