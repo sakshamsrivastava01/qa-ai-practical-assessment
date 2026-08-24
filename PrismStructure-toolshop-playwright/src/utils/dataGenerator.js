@@ -18,6 +18,7 @@ function newUser(overrides = {}) {
       state: faker.location.state(),
       country: 'Germany',
       postal_code: faker.location.zipCode('#####'),
+      house_number: faker.string.numeric({ length: { min: 1, max: 3 } }),
     },
     phone: faker.string.numeric(10),
     dob: '1996-05-14',
