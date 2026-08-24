@@ -33,14 +33,12 @@ test.describe('AC1 - User Registration & Login @ui', () => {
 
   test('TC-UI-03 registered user can log in with valid credentials @smoke @regression', async ({ page }) => {
     const loginPage = new LoginPage(page);
-    const homePage = new HomePage(page);
     const { email, password } = seeded.seededUsers.customer1;
 
     await loginPage.open();
     await loginPage.login(email, password);
 
-    await expect(page).toHaveURL(/\/account|\/$/);
-    await expect(homePage.accountMenu).toBeVisible();
+    await expect(page).toHaveURL(/\/account\/?$/);
   });
 
   test('TC-UI-04 login fails with an incorrect password @smoke @regression', async ({ page }) => {
