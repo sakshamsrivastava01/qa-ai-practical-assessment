@@ -66,3 +66,8 @@
 - Prompt: Run TC-UI-03 against the live application, compare the account selectors, and fix only the failing login assertion.
 - AI Response Summary: Confirmed `data-test="nav-menu"` is the visible dropdown button and `nav-my-account` is a hidden child; Cloudflare then intercepted the redirected account page before Angular rendered either element.
 - Debugging Outcome: Corrected `HomePage.accountMenu` to `nav-menu` and verified successful login with the precise `/account` redirect; the isolated test passed.
+
+### Entry 7
+- Prompt: Run TC-UI-07 against the live application, inspect the product and cart elements, and fix only the broken cart flow.
+- AI Response Summary: Found an unnecessary authenticated redirect, the live `product-quantity` and `product-title` selectors, an add-item navigation race, and ambiguous substring matching for Pliers.
+- Debugging Outcome: Scoped login away from public cart tests, waited for cart persistence, and matched exact product rows and quantities using the live selectors; the isolated test passed.
