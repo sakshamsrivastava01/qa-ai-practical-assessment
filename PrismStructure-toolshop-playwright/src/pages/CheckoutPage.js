@@ -75,8 +75,16 @@ class CheckoutPage extends BasePage {
       this.confirmPaymentBtn.click(),
     ]);
     if (!invoiceResponse.ok()) {
+      const payload = invoiceResponse.request().postDataJSON();
+      const invalidFieldTypes = {
+        billing_state: payload.billing_state === null ? 'null' : typeof payload.billing_state,
+        billing_postal_code: payload.billing_postal_code === null
+          ? 'null'
+          : typeof payload.billing_postal_code,
+      };
       throw new Error(
-        `Invoice creation failed (${invoiceResponse.status()}): ${await invoiceResponse.text()}`
+        `Invoice creation failed (${invoiceResponse.status()}): ${await invoiceResponse.text()} `
+        + `Field types: ${JSON.stringify(invalidFieldTypes)}`
       );
     }
   }
