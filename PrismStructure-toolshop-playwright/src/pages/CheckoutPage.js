@@ -23,10 +23,10 @@ class CheckoutPage extends BasePage {
 
     // Step: payment method
     this.paymentMethodSelect = page.locator('[data-test="payment-method"]');
-    this.confirmPaymentBtn = page.locator('[data-test="confirm"]');
+    this.confirmPaymentBtn = page.locator('[data-test="finish"]');
+    this.paymentSuccessMessage = page.locator('[data-test="payment-success-message"]');
 
-    this.invoiceNumber = page.locator('[data-test="invoice-number"]');
-    this.orderConfirmation = page.getByText(/payment was successful/i);
+    this.orderConfirmation = page.locator('#order-confirmation');
   }
 
   async fillAddress(address) {
@@ -54,8 +54,17 @@ class CheckoutPage extends BasePage {
    */
   async confirmOrderTwice() {
     await this.confirmPaymentBtn.click();
-    await this.confirmPaymentBtn.waitFor({ state: 'visible' }).catch(() => {});
+    await this.paymentSuccessMessage.waitFor({ state: 'visible' });
     await this.confirmPaymentBtn.click();
+  }
+
+  async getInvoiceNumber() {
+    const confirmation = await this.orderConfirmation.innerText();
+    const match = confirmation.match(/invoice number is\s+([^\s.]+)/i);
+    if (!match) {
+      throw new Error(`Invoice number missing from confirmation: ${confirmation}`);
+    }
+    return match[1];
   }
 }
 

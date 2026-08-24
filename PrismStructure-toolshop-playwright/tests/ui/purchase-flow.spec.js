@@ -62,7 +62,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     await checkoutPage.confirmOrderTwice();
 
     await expect(checkoutPage.orderConfirmation).toBeVisible();
-    const invoiceNumber = await checkoutPage.invoiceNumber.innerText();
+    const invoiceNumber = await checkoutPage.getInvoiceNumber();
 
     await invoicesPage.open();
     await invoicesPage.searchInvoice(invoiceNumber);
