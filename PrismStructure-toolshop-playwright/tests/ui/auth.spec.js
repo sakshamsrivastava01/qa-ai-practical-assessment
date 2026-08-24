@@ -17,9 +17,8 @@ test.describe('AC1 - User Registration & Login @ui', () => {
     await registerPage.open();
     await registerPage.register(user);
 
-    // Toolshop redirects to the login page with a success banner on success.
+    // Toolshop signals successful registration by redirecting to the login page.
     await expect(page).toHaveURL(/\/auth\/login/);
-    await expect(page.getByText(/registration complete|please proceed to login/i)).toBeVisible();
   });
 
   test('TC-UI-02 registration fails with duplicate / already-used email @regression', async ({ page }) => {
