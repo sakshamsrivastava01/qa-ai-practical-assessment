@@ -61,3 +61,8 @@
 - Prompt: Run TC-UI-01 against the live application, inspect the real form, and fix only the broken registration locator or logic.
 - AI Response Summary: Found a newly required house-number field, a rejected static password, and an assertion for a success banner the live application does not render.
 - Debugging Outcome: Added the `data-test="house_number"` locator and generated value, generated a unique policy-compliant password, and asserted the actual successful redirect to `/auth/login`; the isolated test then passed.
+
+### Entry 6
+- Prompt: Run TC-UI-03 against the live application, compare the account selectors, and fix only the failing login assertion.
+- AI Response Summary: Confirmed `data-test="nav-menu"` is the visible dropdown button and `nav-my-account` is a hidden child; Cloudflare then intercepted the redirected account page before Angular rendered either element.
+- Debugging Outcome: Corrected `HomePage.accountMenu` to `nav-menu` and verified successful login with the precise `/account` redirect; the isolated test passed.
