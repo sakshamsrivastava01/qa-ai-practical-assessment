@@ -56,3 +56,8 @@
 - **Debugging Outcome:** Followed exactly this approach — see
   `execution-evidence/README.md` for the honest status and the commands to
   produce real evidence.
+
+### Entry 5
+- Prompt: Run TC-UI-01 against the live application, inspect the real form, and fix only the broken registration locator or logic.
+- AI Response Summary: Found a newly required house-number field, a rejected static password, and an assertion for a success banner the live application does not render.
+- Debugging Outcome: Added the `data-test="house_number"` locator and generated value, generated a unique policy-compliant password, and asserted the actual successful redirect to `/auth/login`; the isolated test then passed.
