@@ -2,7 +2,8 @@
 // AC1: User Registration & Login
 // Covers: successful registration, successful login with registered
 // credentials, profile verification, and negative login attempts.
-const { test, expect } = require('@playwright/test');
+const { test, expect, request: apiRequest } = require('@playwright/test');
+const { ApiClient } = require('../../src/api/ApiClient');
 const { RegisterPage } = require('../../src/pages/RegisterPage');
 const { LoginPage } = require('../../src/pages/LoginPage');
 const { HomePage } = require('../../src/pages/HomePage');
@@ -42,12 +43,18 @@ test.describe('AC1 - User Registration & Login @ui', () => {
   });
 
   test('TC-UI-04 login fails with an incorrect password @smoke @regression', async ({ page }) => {
-    const registerPage = new RegisterPage(page);
     const loginPage = new LoginPage(page);
     const user = newUser();
+    const apiContext = await apiRequest.newContext({
+      baseURL: process.env.API_BASE_URL || 'https://api.practicesoftwaretesting.com',
+    });
+    const client = new ApiClient(apiContext);
 
-    await registerPage.open();
-    await registerPage.register(user);
+    const registration = await client.register(user);
+    expect(registration.status()).toBe(201);
+    await apiContext.dispose();
+
+    await loginPage.open();
     await loginPage.login(user.email, 'WrongPassword123');
 
     await expect(loginPage.error).toBeVisible();
