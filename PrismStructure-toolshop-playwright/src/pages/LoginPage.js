@@ -19,6 +19,12 @@ class LoginPage extends BasePage {
     await this.password.fill(password);
     await this.submitBtn.click();
   }
+
+  async establishSession(token) {
+    await this.page.addInitScript((authToken) => {
+      window.localStorage.setItem('auth-token', authToken);
+    }, token);
+  }
 }
 
 module.exports = { LoginPage };

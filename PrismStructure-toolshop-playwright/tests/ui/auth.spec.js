@@ -65,9 +65,17 @@ test.describe('AC1 - User Registration & Login @ui', () => {
     const loginPage = new LoginPage(page);
     const homePage = new HomePage(page);
     const { email, password } = seeded.seededUsers.customer2;
+    const apiContext = await apiRequest.newContext({
+      baseURL: process.env.API_BASE_URL || 'https://api.practicesoftwaretesting.com',
+    });
+    const client = new ApiClient(apiContext);
 
-    await loginPage.open();
-    await loginPage.login(email, password);
+    const login = await client.login(email, password);
+    expect(login.status()).toBe(200);
+    await loginPage.establishSession(client.token);
+    await apiContext.dispose();
+
+    await homePage.open();
     await homePage.accountMenu.click();
     await homePage.myProfileLink.click();
 
