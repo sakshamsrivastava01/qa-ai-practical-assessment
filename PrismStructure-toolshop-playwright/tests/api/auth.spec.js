@@ -21,7 +21,7 @@ test.describe('API AC1 - Authentication & Cart Creation @api', () => {
 
   test('TC-API-03 valid credentials return a bearer token @smoke @regression', async ({ request }) => {
     const client = new ApiClient(request);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
 
     const res = await client.login(email, password);
 
@@ -33,15 +33,17 @@ test.describe('API AC1 - Authentication & Cart Creation @api', () => {
 
   test('TC-API-04 login is rejected for invalid credentials @smoke @regression', async ({ request }) => {
     const client = new ApiClient(request);
+    const user = newUser();
+    await client.register(user);
 
-    const res = await client.login('customer@practicesoftwaretesting.com', 'wrongPass123');
+    const res = await client.login(user.email, 'WrongPassword123');
 
     expect(res.status()).toBe(401);
   });
 
   test('TC-API-06 authenticated user can create a new cart @smoke @regression', async ({ request }) => {
     const client = new ApiClient(request);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
     await client.login(email, password);
 
     const res = await client.createCart();
