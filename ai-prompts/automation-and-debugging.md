@@ -111,3 +111,8 @@
 - Prompt: Run TC-UI-05 from the regression suite and inspect the live profile navigation failure.
 - AI Response Summary: Confirmed `nav-menu` and `nav-my-profile` were correct, but Cloudflare intercepted the full account redirect performed by UI login.
 - Debugging Outcome: Established the session through ApiClient and then used the live header controls for client-side profile navigation; the isolated profile test passed.
+
+### Entry 16
+- Prompt: Run TC-UI-09 from the regression suite and compare the cart removal locator with the live row.
+- AI Response Summary: Found that the live remove anchor has no `data-test="remove"` attribute; the row still exposes an exact `product-title`.
+- Debugging Outcome: Located the sole anchor inside the exact product row and waited for its DELETE response in `CartPage.removeProduct()`; the isolated test passed.
