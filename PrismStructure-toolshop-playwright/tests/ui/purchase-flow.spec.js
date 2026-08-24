@@ -41,7 +41,7 @@ test.describe('AC2 - End-to-End Purchase Flow @ui', () => {
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
     const invoicesPage = new InvoicesPage(page);
-    const { email, password } = seeded.seededUsers.customer1;
+    const { email, password } = seeded.seededUsers.customer2;
 
     await homePage.open();
     await homePage.productCards.first().click();
